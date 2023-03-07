@@ -1,0 +1,70 @@
+/*General */
+html{
+    width: 100%;
+    height: 100%
+}
+
+
+h1 {
+    color: orange;
+}
+
+.label {
+    color: #0056a9;
+	font-size: 18px
+}
+
+/*Header style*/
+header {
+    height: 100px;
+    /*background-color: #666;*/
+    width: 100%;
+    height: 200px;
+    /*padding: 80px;*/
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    /*border: solid grey;*/
+}
+
+
+
+
+.h_title{
+    /*border: solid blue;*/
+    /*position:relative;*/
+    /*float: left;*/
+    padding-top: 50px;
+    height: auto;
+    margin-top: 20px;
+    margin-left: 0px;
+    /*margin-left: 50px;*/
+}
+
+p.titre_page {
+
+    color: #0056a9;
+}
+
+
+
+
+
+/*Body style */
+DIV.div_body_inside{
+    margin-top: 10px;
+    /*background-color: #666;*/
+
+}
+
+
+
+
+.
+
+
+.button {
+    color: #ffffff;
+    background-color: #0056a9;
+    font-weight: bold;
+}

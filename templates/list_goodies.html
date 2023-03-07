@@ -1,0 +1,59 @@
+<html>  
+<head>
+        
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+       
+
+
+    </head>
+
+<body > 
+
+
+<center><h1>Liste des gooddies </h1>
+	<hr>
+
+ <br><br>
+ 
+
+	
+	
+	<table border="1px" style="margin-left: 20px;"> 
+   
+        <tr style="color: blue; ">    
+		
+        <td>Quantité goodie</td> 
+        <td>Libellé goodie</td> 
+		
+
+      
+
+  
+<tr> 
+
+	
+		{% for row in goodies %}
+                        <tr>
+                            {% for cell in row %}
+                            <td>"{{ cell }}"</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+	
+   
+  
+
+  
+</tr> 
+  
+</table> 
+	
+	<br><br>
+	<button> <a href="{{ url_for('tirage')}}">Faire un tirage</a></button>
+    <button> <a href="{{ url_for('raz')}}">Remise à zéro</a></button>
+
+	
+	
+</body>  
+</html> 
