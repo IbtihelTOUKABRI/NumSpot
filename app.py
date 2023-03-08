@@ -51,10 +51,13 @@ def tirage ():
 ###############################################
 @app.route("/raz", methods =['POST','GET'])
 def raz ():
+    
     global stock
     global stock_init
+    global goodies_p
     
     stock = stock_init.copy()
+    goodies_p = [i/sum(stock.values()) for i in list(stock.values())]
 
     return render_template("list_goodies.html", goodies=list(stock.values()))
 
