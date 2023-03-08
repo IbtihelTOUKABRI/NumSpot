@@ -17,6 +17,29 @@ from random import *
 
 
 pathDB="./db/goodies.db"
+###################
+cnx = sqlite3.connect(pathDB)
+
+
+cursorSQLite = cnx.cursor()
+
+cursorSQLite.execute('''DROP TABLE IF EXISTS articles''')
+
+
+cursorSQLite.execute('''CREATE TABLE articles 
+             (ID INTEGER PRIMARY KEY AUTOINCREMENT, qte int, libelle text)''')
+
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (50,'gourde')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (100,'stylo')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (150,'support ordi')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (200,'balle')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (300,'support bambou')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (300,'pince smartphone')")
+cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (400,'cache webcam')")
+
+cnx.commit()
+#####################
+
 
 app = Flask(__name__)
 #@app.route("/")
@@ -149,11 +172,6 @@ def raz ():
 
         return "erreur Remise à zero"
 
-
-
-        
-
-
-app.run("ibti",port=5002,debug = True,use_reloader = False,threaded=True)
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=False)
 
