@@ -6,66 +6,37 @@
 ## History :     Date         | By  | Modification
 ##               07/03/2023   | ITO | Init version
 ##               08/03/2023   | ITO | Changer le log dans la sortie standard , modifier la path de la BD
-##             
+##               08/03/2023   | ITO | Changer la BD par un dict             
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 import sqlite3
 from datetime import datetime
 from flask import *
-from random import *
+import random
 
-
-
-pathDB="./db/goodies.db"
-###################
-cnx = sqlite3.connect(pathDB)
-
-
-cursorSQLite = cnx.cursor()
-
-cursorSQLite.execute('''DROP TABLE IF EXISTS articles''')
-
-
-cursorSQLite.execute('''CREATE TABLE articles 
-             (ID INTEGER PRIMARY KEY AUTOINCREMENT, qte int, libelle text)''')
-
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (50,'gourde')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (100,'stylo')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (150,'support ordi')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (200,'balle')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (300,'support bambou')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (300,'pince smartphone')")
-cursorSQLite.execute("INSERT INTO articles (qte, libelle)VALUES (400,'cache webcam')")
-
-cnx.commit()
 #####################
 
 
 app = Flask(__name__)
-#@app.route("/")
-#def home ():
 
-    #return render_template("home.html") 
+stock = {
+    'gourde': 1,
+    'stylo': 1,
+    'support_ordi': 1,
+    'balle': 1,
+    'support_bambou': 1,
+    'pince': 1,
+    'cache': 1 }
+
 
 @app.route("/")
 def list_goodies ():
 
     try:
-        conn = sqlite3.connect(pathDB)
-        cursorSQLite = conn.cursor()
-
-        sql = "SELECT qte,libelle FROM articles"
-        cursorSQLite.execute(sql)
-               
-        rows = cursorSQLite.fetchall() 
-
-        print(rows)
-
-        print('listing goodies')
-
-        conn.close()
         
-        return render_template("list_goodies.html",goodies=rows)
+        print(stock)
+        
+        return render_template("list_goodies.html",goodies=stock)
 
     except Exception as e:
         print('erreur listing goodies')
@@ -79,51 +50,41 @@ def list_goodies ():
 @app.route("/tirage", methods =['POST','GET'])
 def tirage ():
 
-    testQte=0
-
     try:
-
-        while (testQte==0):
-            conn = sqlite3.connect(pathDB)
-            cursorSQLite = conn.cursor()
-            nbAleatoire = randint(1,7)
-            print(nbAleatoire)
-
-            sql = '''SELECT * FROM articles WHERE ID = ?'''
-            cursorSQLite.execute(sql, (nbAleatoire,))
+        
+        
+        print("debut tirage")
 
 
-            row = cursorSQLite.fetchone() 
-            article=row[2]
-            
-            print(row[1])
-            print(type(row[1]))
+        goodies_p = [i/sum(stock.values()) for i in list(stock.values())]
 
-            if row[1] > 0:
-                qte=row[1]-1
-                testQte=1
-            
+        print(f'goodies_p: {goodies_p}')
 
-        sql = ''' UPDATE articles SET qte = ? WHERE id = ?'''
-        cursorSQLite.execute(sql, (qte,nbAleatoire,))
-
-        conn.commit()
-
-        sql = "SELECT qte,libelle FROM articles"
-        cursorSQLite.execute(sql)
-               
-        rows = cursorSQLite.fetchall() 
         
 
-        for row in rows:
-            print(row)
-        
-        print("affichage tirage")
+        while sum(stock.values()) > 0:
 
-        conn.close()
+            print(f'sum(stock.values(): {sum(stock.values())}')
 
-        return render_template("tirage.html",article=article)
+            
+            item = random.choices(list(stock.keys()), goodies_p)[0]
 
+            print(f'item: {item}')
+            
+
+            stock[item] -= 1
+            if stock[item] == 0:
+                # recalcul des probas avec le stock restant
+                # on ajoute 1 au dénominateur pour éviter un /0 quand le stock est vide
+                goodies_p = [i/(sum(stock.values())+1) for i in list(stock.values())]
+                print(f'probas: {goodies_p}')
+                print(f'tirage item: {item}, stock restant: {stock}, total: {sum(stock.values())}')
+                if(sum(stock.values()) > 0):
+                    return render_template("tirage.html",article=item)
+                else:
+                    
+                    return render_template("list_goodies.html",goodies=stock)    
+ 
     except Exception as e:
         print("erreur tirage")
         
@@ -138,33 +99,19 @@ def tirage ():
 def raz ():
 
     try:
-        conn = sqlite3.connect(pathDB)
-        cursorSQLite = conn.cursor()
+        stock = {
+            'gourde': 1,
+            'stylo': 1,
+            'support_ordi': 1,
+            'balle': 1,
+            'support_bambou': 1,
+            'pince': 1,
+            'cache': 1 }
 
+        print(stock)
+        print("raz OK")
         
-        list = [1,50,100,150,200,300,300,400]
-
-
-        for i in range(1,8):
-        
-            sql = ''' UPDATE articles SET qte = ? WHERE id = ?'''
-            cursorSQLite.execute(sql, (list[i],i,))
-            conn.commit()
-
-        sql = "SELECT qte,libelle FROM articles"
-        cursorSQLite.execute(sql)
-               
-        rows = cursorSQLite.fetchall() 
-        
-
-        for row in rows:
-            print(row)
-
-        print("Remise à zero OK")
-
-        conn.close()
-
-        return render_template("list_goodies.html",goodies=rows)
+        return render_template("list_goodies.html",goodies=stock)
     except Exception as e:
         print("erreur Remise à zero")
 
