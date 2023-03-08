@@ -1,0 +1,20 @@
+L'application se lance à partir de app.py
+
+Modification à faire :
+	app.run(IP ou nom-machine,port=num-port,debug = True,use_reloader = False,threaded=True)
+
+	pathDB=chemin-db-vm
+
+
+Library to install on VM :
+	python v 3.11
+	Flask
+	wfastcgi
+
+features and roles to install on VM server : IIS , CGI
+
+
+	
+
+
+

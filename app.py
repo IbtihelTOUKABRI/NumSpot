@@ -5,6 +5,7 @@
 ##          
 ## History :     Date         | By  | Modification
 ##               07/03/2023   | ITO | Init version
+##               08/03/2023   | ITO | Changer le log dans la sortie standard , modifier la path de la BD
 ##             
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -12,25 +13,10 @@ import sqlite3
 from datetime import datetime
 from flask import *
 from random import *
-import logging
-import numpy as np
 
 
-#################"
-## Code du log###
-#################"
-#change the log directory
-# !!!!!!!!!!
-log_dir="C:/Users/ITO/Desktop/numSpot/log/"
 
-#now = datetime.now()
-#aujourdhui = now.strftime("%Y%m%d")
-
-log_name=log_dir+"numspot.log"
-
-logging.basicConfig(filename=log_name, encoding='utf-8', level=logging.DEBUG,filemode='w')
-
-
+pathDB="C:/Users/ITO/NumSpot/db/goodies.db"
 
 app = Flask(__name__)
 #@app.route("/")
@@ -42,7 +28,7 @@ app = Flask(__name__)
 def list_goodies ():
 
     try:
-        conn = sqlite3.connect('db/goodies.db')
+        conn = sqlite3.connect(pathDB)
         cursorSQLite = conn.cursor()
 
         sql = "SELECT qte,libelle FROM articles"
@@ -52,14 +38,15 @@ def list_goodies ():
 
         print(rows)
 
-        logging.debug('listing goodies')
+        print('listing goodies')
 
+        conn.close()
         
         return render_template("list_goodies.html",goodies=rows)
 
     except Exception as e:
-        logging.error('erreur listing goodies')
-        logging.error(e)
+        print('erreur listing goodies')
+        print(e)
 
         return "erreur listing goodies"
   
@@ -74,7 +61,7 @@ def tirage ():
     try:
 
         while (testQte==0):
-            conn = sqlite3.connect('db/goodies.db')
+            conn = sqlite3.connect(pathDB)
             cursorSQLite = conn.cursor()
             nbAleatoire = randint(1,7)
             print(nbAleatoire)
@@ -86,8 +73,8 @@ def tirage ():
             row = cursorSQLite.fetchone() 
             article=row[2]
             
-            logging.debug(row[1])
-            logging.debug(type(row[1]))
+            print(row[1])
+            print(type(row[1]))
 
             if row[1] > 0:
                 qte=row[1]-1
@@ -108,15 +95,16 @@ def tirage ():
         for row in rows:
             print(row)
         
-        logging.debug("affichage tirage")
+        print("affichage tirage")
 
+        conn.close()
 
         return render_template("tirage.html",article=article)
 
     except Exception as e:
-        logging.error("erreur tirage")
+        print("erreur tirage")
         
-        logging.error(e)
+        print(e)
 
         return "erreur Tirage"
 
@@ -127,7 +115,7 @@ def tirage ():
 def raz ():
 
     try:
-        conn = sqlite3.connect('db/goodies.db')
+        conn = sqlite3.connect(pathDB)
         cursorSQLite = conn.cursor()
 
         
@@ -149,14 +137,15 @@ def raz ():
         for row in rows:
             print(row)
 
-        logging.debug("Remse à zero OK")
+        print("Remise à zero OK")
 
+        conn.close()
 
         return render_template("list_goodies.html",goodies=rows)
     except Exception as e:
-        logging.error("erreur Remise à zero")
+        print("erreur Remise à zero")
 
-        logging.error(e)
+        print(e)
 
         return "erreur Remise à zero"
 
