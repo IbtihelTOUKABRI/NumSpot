@@ -56,7 +56,7 @@ def raz ():
     
     stock = stock_init.copy()
 
-    return render_template("list_goodies.html", goodies=list(stock.items()))
+    return render_template("list_goodies.html", goodies=list(stock.values()))
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port=8080, debug=True)
