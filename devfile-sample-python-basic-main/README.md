@@ -1,1 +1,0 @@
-# devfile-sample-python-basic

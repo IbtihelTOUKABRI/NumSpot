@@ -16,7 +16,7 @@ from random import *
 
 
 
-pathDB="C:/Users/ITO/NumSpot/db/goodies.db"
+pathDB="./db/goodies.db"
 
 app = Flask(__name__)
 #@app.route("/")
